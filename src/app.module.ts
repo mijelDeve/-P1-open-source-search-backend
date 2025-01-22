@@ -12,6 +12,7 @@ import { Level } from './level/entities/level.entity';
 import { Request } from './requests/entities/request.entity';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,8 +21,8 @@ import { UserService } from './user/user.service';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '',
-      database: 'open_source_help',
+      password: 'toor',
+      database: 'open_source_app',
       entities: [User, Language, Level, Request],
       synchronize: true,
     }),
@@ -29,7 +30,8 @@ import { UserService } from './user/user.service';
     RequestsModule,
     LevelModule,
     LanguageModule,
-    UserModule
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
