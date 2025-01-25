@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('requests')
@@ -13,6 +12,13 @@ export class RequestsController {
   @Post('register')
   create(@Body() createRequestDto: CreateRequestDto) {
     return this.requestsService.create(createRequestDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('get-by-user/:id')
+  findByUser(@Param('id') id: string) {
+    console.log(id)
+    return this.requestsService.findByUser(id)
   }
 
   @Get()
