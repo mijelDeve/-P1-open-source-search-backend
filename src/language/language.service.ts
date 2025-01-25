@@ -5,12 +5,12 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class LanguageService {
-    constructor(
-        @InjectRepository(Language)
-        private languageRepository: Repository<Language>
-    ){}
+  constructor(
+    @InjectRepository(Language)
+    private languageRepository: Repository<Language>,
+  ) {}
 
-    async findAll(): Promise<Language[]> {
-        return this.languageRepository.find();
-    }
+  async findAll(): Promise<Language[]> {
+    return this.languageRepository.find();
+  }
 }

@@ -5,7 +5,7 @@ import { User } from './entities/user.entity';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @Post()
+  @Post('register')
   create(@Body() createUserDto: { username: string; email: string; password: string }): Promise<User> {
     return this.userService.createUser(createUserDto.username, createUserDto.email, createUserDto.password);
   }
