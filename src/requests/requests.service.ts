@@ -1,11 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from './entities/request.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Language } from 'src/language/entities/language.entity';
+import { Level } from 'src/level/entities/level.entity';
 
 @Injectable()
 export class RequestsService {
-  create(createRequestDto: CreateRequestDto) {
-    return 'This action adds a new request';
+  constructor(
+    @InjectRepository(Request)
+    private requestRepository: Repository<Request>,
+
+    @InjectRepository(Language)
+    private languageRepository: Repository<Language>,
+
+    @InjectRepository(Level)
+    private levelRepository: Repository<Level>,
+
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) { }
+
+  async create(createRequestDto: CreateRequestDto) {
+    try {
+      const user = await this.userRepository.findOne({ where: { id: Number(createRequestDto.userId) } });
+      const language = await this.languageRepository.findOne({ where: { id: Number(createRequestDto.languageId) } });
+      const level = await this.levelRepository.findOne({ where: { id: Number(createRequestDto.levelId) } });
+
+      if (!user || !language || !level) {
+        throw new Error('Usuario, lenguaje o nivel no encontrado');
+      }
+
+      const requestGithub = this.requestRepository.create({
+        title: createRequestDto.title,
+        description: createRequestDto.description,
+        link: createRequestDto.link,
+        created_at: new Date(),
+        language,
+        level,
+        user,
+      });
+
+      const savedRequest = await this.requestRepository.save(requestGithub);
+
+      return {
+        message: 'Solicitud creada correctamente',
+        request: savedRequest,
+      };
+    } catch (error) {
+      return {
+        message: 'Error al crear la solicitud',
+        error: error.message || error,
+      };
+    }
   }
 
   findAll() {
