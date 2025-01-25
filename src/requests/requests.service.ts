@@ -58,6 +58,34 @@ export class RequestsService {
     }
   }
 
+  async findByUser(id: string) {
+
+    try {
+      const user = await this.userRepository.findOne({ where: { id: Number(id) } });
+
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+
+      const requests = await this.requestRepository.find({
+        where: {
+          user
+        }
+      })
+
+      return {
+        message: "Solicitudes obtenidas con éxito",
+        data: requests
+      }
+    } catch (error) {
+      return {
+        message: 'Error al crear la solicitud',
+        error: error.message || error,
+      };
+    }
+
+  }
+
   findAll() {
     return `This action returns all requests`;
   }
