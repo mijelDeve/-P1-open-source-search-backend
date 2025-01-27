@@ -80,7 +80,7 @@ export class RequestsService {
       }
     } catch (error) {
       return {
-        message: 'Error al crear la solicitud',
+        message: 'Error al obtener las solicitudes por usuario',
         error: error.message || error,
       };
     }
@@ -118,7 +118,7 @@ export class RequestsService {
       }
     } catch (error) {
       return {
-        message: 'Error al crear la solicitud',
+        message: 'Error al obtener solicitudes',
         error: error.message || error,
       };
     }

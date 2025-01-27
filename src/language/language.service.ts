@@ -10,7 +10,20 @@ export class LanguageService {
     private languageRepository: Repository<Language>,
   ) {}
 
-  async findAll(): Promise<Language[]> {
-    return this.languageRepository.find();
+  async findAll(): Promise<any> {
+
+    try {
+      const lenguages = this.languageRepository.find();
+
+      return {
+        message: "Lenguajes obtenidos con éxito",
+        data: lenguages
+      }
+    } catch (error) {
+      return {
+        message: 'Error al obtener los lenguajes',
+        error: error.message || error,
+      };
+    }
   }
 }
