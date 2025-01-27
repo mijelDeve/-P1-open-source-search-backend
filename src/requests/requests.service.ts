@@ -88,21 +88,33 @@ export class RequestsService {
   }
 
   async findAll(paginationDto: PaginationDto): Promise<any> {
-
     try {
 
-      const { page, limit } = paginationDto;
+      const { page, limit, languageId, levelId } = paginationDto;
 
       const skip = (page - 1) * limit;
 
-      const requests = await this.requestRepository.find({
-        skip: skip,
-        take: limit,
-      });
+      const query = this.requestRepository.createQueryBuilder('request')
+        .leftJoinAndSelect('request.language', 'language')
+        .leftJoinAndSelect('request.level', 'level')
+        .skip(skip)
+        .take(limit);
+
+      if (languageId) {
+        query.andWhere('request.language_id = :languageId', { languageId });
+      }
+
+      if (levelId) {
+        query.andWhere('request.level_id = :levelId', { levelId });
+      }
+      const [data, totalCount] = await query.getManyAndCount();
 
       return {
         message: "Solicitudes obtenidas con éxito",
-        data: requests
+        data: {
+          data,
+          totalCount
+        }
       }
     } catch (error) {
       return {
