@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Language } from 'src/language/entities/language.entity';
 import { Level } from 'src/level/entities/level.entity';
+import { PaginationDto } from './dto/pagination-request.dto';
 
 @Injectable()
 export class RequestsService {
@@ -86,19 +87,40 @@ export class RequestsService {
 
   }
 
-  findAll() {
-    return `This action returns all requests`;
+  async findAll(paginationDto: PaginationDto): Promise<any> {
+
+    try {
+
+      const { page, limit } = paginationDto;
+
+      const skip = (page - 1) * limit;
+
+      const requests = await this.requestRepository.find({
+        skip: skip,
+        take: limit,
+      });
+
+      return {
+        message: "Solicitudes obtenidas con éxito",
+        data: requests
+      }
+    } catch (error) {
+      return {
+        message: 'Error al crear la solicitud',
+        error: error.message || error,
+      };
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} request`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} request`;
+  // }
 
-  update(id: number, updateRequestDto: UpdateRequestDto) {
-    return `This action updates a #${id} request`;
-  }
+  // update(id: number, updateRequestDto: UpdateRequestDto) {
+  //   return `This action updates a #${id} request`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} request`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} request`;
+  // }
 }
