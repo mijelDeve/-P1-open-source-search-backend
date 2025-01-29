@@ -11,15 +11,16 @@ export class LanguageService {
   ) {}
 
   async findAll(): Promise<any> {
-
     try {
-      const lenguages = this.languageRepository.find();
+      const lenguages = await this.languageRepository.find();
+      console.log(lenguages);
 
       return {
-        message: "Lenguajes obtenidos con éxito",
-        data: lenguages
-      }
+        message: 'Lenguajes obtenidos con éxito',
+        data: lenguages,
+      };
     } catch (error) {
+      console.log(error);
       return {
         message: 'Error al obtener los lenguajes',
         error: error.message || error,

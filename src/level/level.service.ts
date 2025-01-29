@@ -12,7 +12,7 @@ export class LevelService {
 
   async findAll(): Promise<any> {
     try {
-      const levels = this.levelRepository.find();
+      const levels = await this.levelRepository.find();
 
       return {
         message: "Niveles obtenidos con éxito",
