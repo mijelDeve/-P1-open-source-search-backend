@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,7 +28,16 @@ async function bootstrap() {
   // Configurar Swagger UI en el path '/api'
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3001);
+
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true, // Opcional, transforma los valores de la solicitud según los tipos de datos
+    forbidNonWhitelisted: true, // Opcional, rechaza propiedades no definidas en el DTO
+    whitelist: true, // Opcional, elimina las propiedades no definidas en el DTO
+  }));
+
+
+
+  await app.listen(3002);
 }
 
 bootstrap();

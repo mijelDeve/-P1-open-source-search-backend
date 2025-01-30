@@ -55,10 +55,12 @@ export class UserService {
         data: user
       }
     } catch (error) {
-      return {
-        message: 'Error al crear el usuario',
-        error: error.message || error,
-      };
+      // return {
+      //   message: 'Error al crear el usuario',
+      //   error: error.message || error,
+      //   status: 400
+      // };
+      throw new BadRequestException('Error al crear el usuario: ' + (error.message || error));
     }
   }
 }

@@ -14,22 +14,13 @@ import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HealthController } from './health/auth.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'root',
-    //   password: 'toor',
-    //   database: 'open_source_app',
-    //   entities: [User, Language, Level, Request],
-    //   synchronize: true,
-    // }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -41,7 +32,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [User, Language, Level, Request],
-        synchronize: true, // No usar en producción; genera cambios automáticamente en la base de datos
+        synchronize: true,
       }),
     }),
     TypeOrmModule.forFeature([User, Language, Level, Request]),
@@ -51,7 +42,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UserModule,
     AuthModule,
   ],
-  controllers: [AppController, UserController],
+  controllers: [AppController, UserController, HealthController],
   providers: [AppService, UserService],
 })
 export class AppModule {}
