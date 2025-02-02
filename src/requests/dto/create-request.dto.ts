@@ -13,9 +13,6 @@ export class CreateRequestDto {
     link: string;
 
     @IsString()
-    userId: string;
-
-    @IsString()
     languageId: string;
     
     @IsString()

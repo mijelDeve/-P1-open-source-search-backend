@@ -25,9 +25,9 @@ export class RequestsService {
     private userRepository: Repository<User>,
   ) { }
 
-  async create(createRequestDto: CreateRequestDto) {
+  async create(createRequestDto: CreateRequestDto, userData: UserData) {
     try {
-      const user = await this.userRepository.findOne({ where: { id: Number(createRequestDto.userId) } });
+      const user = await this.userRepository.findOne({ where: { id: Number(userData.userId) } });
       const language = await this.languageRepository.findOne({ where: { id: Number(createRequestDto.languageId) } });
       const level = await this.levelRepository.findOne({ where: { id: Number(createRequestDto.levelId) } });
 

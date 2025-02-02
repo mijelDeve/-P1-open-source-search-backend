@@ -11,7 +11,7 @@ import { User } from 'src/user/entities/user.entity';
 
 @Module({
   imports: [
-    ConfigModule, // Importa ConfigModule para usar ConfigService
+    ConfigModule.forRoot(), // Importa ConfigModule para usar ConfigService
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule], // Necesario para usar ConfigService

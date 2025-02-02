@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Request } from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
@@ -9,10 +9,13 @@ import { PaginationDto } from './dto/pagination-request.dto';
 export class RequestsController {
   constructor(private readonly requestsService: RequestsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post('register')
-  create(@Body() createRequestDto: CreateRequestDto) {
-    return this.requestsService.create(createRequestDto);
+  @UseGuards(JwtAuthGuard)
+  create(@Request() req, @Body() createRequestDto: CreateRequestDto) {
+    const userId = req; // Aquí obtienes el userId del token
+    console.log("Request en user: ",req.user)
+    // console.log("USER ID FROM TOKEN: ", userId);
+    return this.requestsService.create(createRequestDto, req.user);
   }
 
   @UseGuards(JwtAuthGuard)
