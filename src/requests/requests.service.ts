@@ -92,13 +92,20 @@ export class RequestsService {
 
       const { page, limit, languageId, levelId } = paginationDto;
 
-      const skip = (page - 1) * limit;
+      console.log(paginationDto)
+      console.log(levelId)
+
+      // console.log(page)
+
+      const skip = (Number(page) - 1) * Number(limit);
+
+      // console.log(skip)
 
       const query = this.requestRepository.createQueryBuilder('request')
         .leftJoinAndSelect('request.language', 'language')
         .leftJoinAndSelect('request.level', 'level')
         .skip(skip)
-        .take(limit);
+        .take(Number(limit));
 
       if (languageId) {
         query.andWhere('request.language_id = :languageId', { languageId });

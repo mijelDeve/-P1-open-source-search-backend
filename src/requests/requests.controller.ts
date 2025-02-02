@@ -12,9 +12,6 @@ export class RequestsController {
   @Post('register')
   @UseGuards(JwtAuthGuard)
   create(@Request() req, @Body() createRequestDto: CreateRequestDto) {
-    const userId = req; // Aquí obtienes el userId del token
-    console.log("Request en user: ",req.user)
-    // console.log("USER ID FROM TOKEN: ", userId);
     return this.requestsService.create(createRequestDto, req.user);
   }
 
