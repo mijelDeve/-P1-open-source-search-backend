@@ -59,11 +59,15 @@ export class RequestsService {
     }
   }
 
-  async findByUser(id: string) {
+  async findByUser(userReq: any) {
+    console.log("USER IN FINDBYUSER: ", userReq)
 
     try {
-      const user = await this.userRepository.findOne({ where: { id: Number(id) } });
-
+      const user = await this.userRepository.find({
+        where: { id: Number(userReq.userId) },
+        select: ['id', 'username', 'email']
+      });
+      
       if (!user) {
         throw new Error('Usuario no encontrado');
       }
@@ -71,7 +75,8 @@ export class RequestsService {
       const requests = await this.requestRepository.find({
         where: {
           user
-        }
+        },
+        relations: ['language', 'level', 'user'], 
       })
 
       return {
@@ -84,7 +89,6 @@ export class RequestsService {
         error: error.message || error,
       };
     }
-
   }
 
   async findAll(paginationDto: PaginationDto): Promise<any> {
@@ -92,18 +96,12 @@ export class RequestsService {
 
       const { page, limit, languageId, levelId } = paginationDto;
 
-      console.log(paginationDto)
-      console.log(levelId)
-
-      // console.log(page)
-
       const skip = (Number(page) - 1) * Number(limit);
-
-      // console.log(skip)
 
       const query = this.requestRepository.createQueryBuilder('request')
         .leftJoinAndSelect('request.language', 'language')
         .leftJoinAndSelect('request.level', 'level')
+        .leftJoinAndSelect('request.user', 'user')
         .skip(skip)
         .take(Number(limit));
 

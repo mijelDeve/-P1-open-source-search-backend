@@ -15,11 +15,10 @@ export class RequestsController {
     return this.requestsService.create(createRequestDto, req.user);
   }
 
+  @Get('get-by-user')
   @UseGuards(JwtAuthGuard)
-  @Get('get-by-user/:id')
-  findByUser(@Param('id') id: string) {
-    console.log(id)
-    return this.requestsService.findByUser(id)
+  findByUser(@Request() req) {
+    return this.requestsService.findByUser(req.user)
   }
 
   @Get('get-all-request')
