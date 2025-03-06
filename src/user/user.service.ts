@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -55,12 +56,44 @@ export class UserService {
         data: user
       }
     } catch (error) {
-      // return {
-      //   message: 'Error al crear el usuario',
-      //   error: error.message || error,
-      //   status: 400
-      // };
+
       throw new BadRequestException('Error al crear el usuario: ' + (error.message || error));
+    }
+  }
+
+
+  async updateUserData(userReq: any, userRequestDto: UpdateUserDto) {
+    try {
+
+      const user = await this.userRepository.findOne({
+        where: { id: Number(userReq.userId) },
+        select: ['id', 'username', 'email', 'password']
+      });
+      
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+
+      user.username = userRequestDto.username
+      user.email = userRequestDto.email
+      const hashedPassword = await bcrypt.hash(userRequestDto.password, 10)
+      user.password = hashedPassword
+
+      const updatedUser = await this.userRepository.save(user);
+
+      return {
+        message: 'Datos de usuario actualizados exitosamente',
+        user: {
+          id: updatedUser.id,
+          username: updatedUser.username,
+          email: updatedUser.email,
+        }
+      };
+    } catch (error) {
+      return {
+        message: 'Error al actualizar los datos del usuario',
+        error: error.message || error,
+      };
     }
   }
 }

@@ -13,3 +13,5 @@ export class CreateUserDto {
     @IsNotEmpty()
     password: string;
 }
+
+export class UpdateUserDto extends CreateUserDto {}
